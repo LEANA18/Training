@@ -1,0 +1,438 @@
+ASSIGNMENT
+**********
+#CREATE EXTERNAL TABLE FOR LOG DATA
+
+hive> CREATE EXTERNAL TABLE IF NOT EXISTS Logs(log_date STRING,log_level STRING,service_name STRING,message STRING)ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE LOCATION '/user/cloudera/ust/Logs_Details/';
+OK
+Time taken: 0.172 seconds
+
+#LOAD DATA INTO TABLE
+
+hive> LOAD DATA INPATH '/user/cloudera/ust/Logs_Details/sample_log_data.txt' INTO TABLE Logs ;
+Loading data to table details.logs
+Table details.logs stats: [num_partitions: 0, num_files: 0, num_rows: 0, total_size: 0, raw_data_size: 0]
+OK
+Time taken: 1.384 seconds
+
+#BASIC LOG QUERIES
+
+#a)View all logs
+
+hive> SELECT * FROM Logs;
+OK
+2025-05-01 11:39:00	INFO	InventoryService	Order placed
+2025-05-01 11:25:00	WARN	PaymentService	Address not verified
+2025-05-01 12:49:00	ERROR	ShippingService	Shipping error
+2025-05-01 14:33:00	WARN	ShippingService	Slow response time
+2025-05-01 10:27:00	INFO	ShippingService	Inventory updated
+2025-05-01 14:11:00	INFO	PaymentService	Order placed
+2025-05-01 12:28:00	ERROR	OrderService	Payment failed
+2025-05-01 13:54:00	ERROR	OrderService	Payment failed
+2025-05-01 14:54:00	ERROR	AuthService	Order placement failed
+2025-05-01 10:54:00	WARN	OrderService	Address not verified
+2025-05-01 14:38:00	ERROR	ShippingService	Payment failed
+2025-05-01 11:18:00	INFO	OrderService	Order placed
+2025-05-01 12:44:00	INFO	PaymentService	Order placed
+2025-05-01 12:24:00	WARN	OrderService	Low stock alert
+2025-05-01 13:41:00	WARN	ShippingService	Inventory nearing threshold
+2025-05-01 10:51:00	ERROR	ShippingService	Order placement failed
+2025-05-01 12:25:00	WARN	PaymentService	Retrying payment
+2025-05-01 11:28:00	ERROR	PaymentService	Order placement failed
+2025-05-01 13:18:00	INFO	ShippingService	Inventory updated
+2025-05-01 10:42:00	INFO	OrderService	Order placed
+2025-05-01 13:16:00	INFO	InventoryService	Order placed
+2025-05-01 14:26:00	INFO	AuthService	Shipping started
+2025-05-01 10:58:00	WARN	InventoryService	Address not verified
+2025-05-01 12:04:00	ERROR	ShippingService	User authentication failed for user 105
+2025-05-01 10:04:00	INFO	InventoryService	Order placed
+2025-05-01 11:04:00	WARN	ShippingService	Address not verified
+2025-05-01 13:56:00	ERROR	OrderService	Order placement failed
+2025-05-01 10:12:00	WARN	OrderService	Address not verified
+2025-05-01 11:26:00	WARN	OrderService	Inventory nearing threshold
+2025-05-01 11:32:00	INFO	AuthService	User login successful for user 102
+2025-05-01 13:32:00	ERROR	InventoryService	Shipping error
+2025-05-01 14:49:00	WARN	AuthService	Low stock alert
+2025-05-01 12:44:00	WARN	InventoryService	Inventory nearing threshold
+2025-05-01 10:27:00	INFO	PaymentService	Inventory updated
+2025-05-01 11:27:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 11:52:00	INFO	ShippingService	Inventory updated
+2025-05-01 10:19:00	WARN	AuthService	Low stock alert
+2025-05-01 10:17:00	INFO	AuthService	User login successful for user 110
+2025-05-01 13:03:00	ERROR	ShippingService	Shipping error
+2025-05-01 10:30:00	INFO	OrderService	Payment processed
+2025-05-01 10:31:00	WARN	OrderService	Address not verified
+2025-05-01 10:28:00	ERROR	OrderService	Order placement failed
+2025-05-01 11:36:00	INFO	InventoryService	Inventory updated
+2025-05-01 10:18:00	WARN	PaymentService	Address not verified
+2025-05-01 11:40:00	INFO	PaymentService	Payment processed
+2025-05-01 11:21:00	INFO	PaymentService	User login successful for user 106
+2025-05-01 10:51:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 12:41:00	ERROR	OrderService	Shipping error
+2025-05-01 12:40:00	INFO	AuthService	Shipping started
+2025-05-01 14:31:00	WARN	OrderService	Retrying payment
+2025-05-01 14:49:00	ERROR	ShippingService	User authentication failed for user 106
+2025-05-01 14:56:00	ERROR	PaymentService	Shipping error
+2025-05-01 11:31:00	ERROR	PaymentService	User authentication failed for user 104
+2025-05-01 12:31:00	ERROR	ShippingService	User authentication failed for user 101
+2025-05-01 11:33:00	WARN	AuthService	Slow response time
+2025-05-01 10:14:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 12:54:00	WARN	AuthService	Low stock alert
+2025-05-01 11:08:00	INFO	PaymentService	User login successful for user 107
+2025-05-01 13:14:00	ERROR	ShippingService	User authentication failed for user 109
+2025-05-01 10:34:00	ERROR	OrderService	Payment failed
+2025-05-01 10:38:00	INFO	AuthService	Shipping started
+2025-05-01 10:25:00	INFO	PaymentService	Inventory updated
+2025-05-01 11:16:00	INFO	ShippingService	User login successful for user 100
+2025-05-01 13:18:00	INFO	ShippingService	Inventory updated
+2025-05-01 11:43:00	WARN	OrderService	Address not verified
+2025-05-01 13:15:00	ERROR	ShippingService	Payment failed
+2025-05-01 11:49:00	INFO	InventoryService	Shipping started
+2025-05-01 13:33:00	ERROR	OrderService	Inventory sync error
+2025-05-01 13:53:00	ERROR	OrderService	Payment failed
+2025-05-01 12:36:00	INFO	OrderService	Shipping started
+2025-05-01 14:59:00	ERROR	AuthService	Inventory sync error
+2025-05-01 13:28:00	ERROR	AuthService	Order placement failed
+2025-05-01 12:51:00	WARN	OrderService	Slow response time
+2025-05-01 10:14:00	INFO	ShippingService	User login successful for user 107
+2025-05-01 14:41:00	WARN	PaymentService	Inventory nearing threshold
+2025-05-01 11:13:00	ERROR	PaymentService	User authentication failed for user 109
+2025-05-01 14:13:00	INFO	OrderService	Shipping started
+2025-05-01 10:46:00	ERROR	InventoryService	Order placement failed
+2025-05-01 14:41:00	ERROR	ShippingService	Shipping error
+2025-05-01 10:04:00	WARN	AuthService	Inventory nearing threshold
+2025-05-01 12:46:00	INFO	PaymentService	Inventory updated
+2025-05-01 11:00:00	WARN	ShippingService	Low stock alert
+2025-05-01 11:38:00	ERROR	OrderService	Inventory sync error
+2025-05-01 10:11:00	WARN	InventoryService	Address not verified
+2025-05-01 11:11:00	ERROR	OrderService	User authentication failed for user 110
+2025-05-01 10:20:00	ERROR	PaymentService	User authentication failed for user 106
+2025-05-01 13:50:00	ERROR	ShippingService	Payment failed
+2025-05-01 12:55:00	ERROR	PaymentService	Order placement failed
+2025-05-01 11:13:00	ERROR	AuthService	Inventory sync error
+2025-05-01 10:54:00	WARN	OrderService	Inventory nearing threshold
+2025-05-01 14:01:00	INFO	AuthService	User login successful for user 102
+2025-05-01 10:06:00	ERROR	PaymentService	Payment failed
+2025-05-01 13:51:00	WARN	AuthService	Address not verified
+2025-05-01 14:18:00	WARN	OrderService	Retrying payment
+2025-05-01 11:01:00	INFO	AuthService	Order placed
+2025-05-01 10:35:00	ERROR	PaymentService	Inventory sync error
+2025-05-01 11:40:00	WARN	ShippingService	Slow response time
+2025-05-01 11:54:00	WARN	PaymentService	Retrying payment
+2025-05-01 11:53:00	INFO	AuthService	Order placed
+2025-05-01 13:01:00	INFO	InventoryService	Order placed
+Time taken: 0.337 seconds
+
+#b)Count total logs
+
+hive> SELECT COUNT(*) FROM Logs;
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapred.reduce.tasks=<number>
+Starting Job = job_202505110807_0001, Tracking URL = http://0.0.0.0:50030/jobdetails.jsp?jobid=job_202505110807_0001
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_202505110807_0001
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2025-05-11 10:43:47,210 Stage-1 map = 0%,  reduce = 0%
+2025-05-11 10:43:52,272 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.12 sec
+2025-05-11 10:43:53,283 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.12 sec
+2025-05-11 10:43:54,295 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.12 sec
+2025-05-11 10:43:55,304 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.12 sec
+2025-05-11 10:43:56,317 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.12 sec
+2025-05-11 10:43:57,338 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.29 sec
+2025-05-11 10:43:58,349 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.29 sec
+2025-05-11 10:43:59,367 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.29 sec
+2025-05-11 10:44:00,381 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.29 sec
+2025-05-11 10:44:01,403 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.29 sec
+MapReduce Total cumulative CPU time: 1 seconds 290 msec
+Ended Job = job_202505110807_0001
+MapReduce Jobs Launched: 
+Job 0: Map: 1  Reduce: 1   Cumulative CPU: 1.29 sec   HDFS Read: 6370 HDFS Write: 4 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 290 msec
+OK
+100
+Time taken: 22.782 seconds
+
+c)Count logs by logs level
+
+hive> SELECT log_level,COUNT(*) AS Total FROM Logs GROUP BY Log_level;
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapred.reduce.tasks=<number>
+Starting Job = job_202505110807_0002, Tracking URL = http://0.0.0.0:50030/jobdetails.jsp?jobid=job_202505110807_0002
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_202505110807_0002
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2025-05-11 10:53:01,379 Stage-1 map = 0%,  reduce = 0%
+2025-05-11 10:53:08,417 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.34 sec
+2025-05-11 10:53:09,426 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.34 sec
+2025-05-11 10:53:10,438 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.34 sec
+2025-05-11 10:53:11,452 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.34 sec
+2025-05-11 10:53:12,465 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.34 sec
+2025-05-11 10:53:13,478 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.34 sec
+2025-05-11 10:53:14,490 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.34 sec
+2025-05-11 10:53:15,498 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 2.58 sec
+2025-05-11 10:53:16,508 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 2.58 sec
+2025-05-11 10:53:17,527 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 2.58 sec
+2025-05-11 10:53:18,536 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 2.58 sec
+2025-05-11 10:53:19,546 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 2.58 sec
+MapReduce Total cumulative CPU time: 2 seconds 580 msec
+Ended Job = job_202505110807_0002
+MapReduce Jobs Launched: 
+Job 0: Map: 1  Reduce: 1   Cumulative CPU: 2.58 sec   HDFS Read: 6370 HDFS Write: 25 SUCCESS
+Total MapReduce CPU Time Spent: 2 seconds 580 msec
+OK
+ERROR	38
+INFO	33
+WARN	29
+Time taken: 24.05 seconds
+
+#d) Count ERROR logs per service
+
+hive> SELECT service_name,COUNT(*) AS error_count FROM Logs WHERE log_level = "ERROR" GROUP BY service_name; 
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapred.reduce.tasks=<number>
+Starting Job = job_202505110807_0003, Tracking URL = http://0.0.0.0:50030/jobdetails.jsp?jobid=job_202505110807_0003
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_202505110807_0003
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2025-05-11 10:56:18,804 Stage-1 map = 0%,  reduce = 0%
+2025-05-11 10:56:25,843 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.73 sec
+2025-05-11 10:56:26,853 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.73 sec
+2025-05-11 10:56:27,861 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.73 sec
+2025-05-11 10:56:28,869 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.73 sec
+2025-05-11 10:56:29,882 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.73 sec
+2025-05-11 10:56:30,890 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.73 sec
+2025-05-11 10:56:31,901 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.73 sec
+2025-05-11 10:56:32,910 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 3.13 sec
+2025-05-11 10:56:33,920 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 3.13 sec
+2025-05-11 10:56:34,931 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 3.13 sec
+2025-05-11 10:56:35,946 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 3.13 sec
+2025-05-11 10:56:36,959 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 3.13 sec
+MapReduce Total cumulative CPU time: 3 seconds 130 msec
+Ended Job = job_202505110807_0003
+MapReduce Jobs Launched: 
+Job 0: Map: 1  Reduce: 1   Cumulative CPU: 3.13 sec   HDFS Read: 6370 HDFS Write: 85 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 130 msec
+OK
+AuthService	4
+InventoryService	5
+OrderService	10
+PaymentService	8
+ShippingService	11
+Time taken: 24.107 seconds
+
+#4) Filter Logs by Date
+
+hive> SELECT * FROM Logs WHERE log_date LIKE '2025-05-01%';
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_202505110807_0004, Tracking URL = http://0.0.0.0:50030/jobdetails.jsp?jobid=job_202505110807_0004
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_202505110807_0004
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2025-05-11 11:03:44,223 Stage-1 map = 0%,  reduce = 0%
+2025-05-11 11:03:50,253 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.04 sec
+2025-05-11 11:03:51,260 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.04 sec
+2025-05-11 11:03:52,268 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.04 sec
+2025-05-11 11:03:53,277 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.04 sec
+2025-05-11 11:03:54,285 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.04 sec
+MapReduce Total cumulative CPU time: 1 seconds 40 msec
+Ended Job = job_202505110807_0004
+MapReduce Jobs Launched: 
+Job 0: Map: 1   Cumulative CPU: 1.04 sec   HDFS Read: 6370 HDFS Write: 6125 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 40 msec
+OK
+2025-05-01 11:39:00	INFO	InventoryService	Order placed
+2025-05-01 11:25:00	WARN	PaymentService	Address not verified
+2025-05-01 12:49:00	ERROR	ShippingService	Shipping error
+2025-05-01 14:33:00	WARN	ShippingService	Slow response time
+2025-05-01 10:27:00	INFO	ShippingService	Inventory updated
+2025-05-01 14:11:00	INFO	PaymentService	Order placed
+2025-05-01 12:28:00	ERROR	OrderService	Payment failed
+2025-05-01 13:54:00	ERROR	OrderService	Payment failed
+2025-05-01 14:54:00	ERROR	AuthService	Order placement failed
+2025-05-01 10:54:00	WARN	OrderService	Address not verified
+2025-05-01 14:38:00	ERROR	ShippingService	Payment failed
+2025-05-01 11:18:00	INFO	OrderService	Order placed
+2025-05-01 12:44:00	INFO	PaymentService	Order placed
+2025-05-01 12:24:00	WARN	OrderService	Low stock alert
+2025-05-01 13:41:00	WARN	ShippingService	Inventory nearing threshold
+2025-05-01 10:51:00	ERROR	ShippingService	Order placement failed
+2025-05-01 12:25:00	WARN	PaymentService	Retrying payment
+2025-05-01 11:28:00	ERROR	PaymentService	Order placement failed
+2025-05-01 13:18:00	INFO	ShippingService	Inventory updated
+2025-05-01 10:42:00	INFO	OrderService	Order placed
+2025-05-01 13:16:00	INFO	InventoryService	Order placed
+2025-05-01 14:26:00	INFO	AuthService	Shipping started
+2025-05-01 10:58:00	WARN	InventoryService	Address not verified
+2025-05-01 12:04:00	ERROR	ShippingService	User authentication failed for user 105
+2025-05-01 10:04:00	INFO	InventoryService	Order placed
+2025-05-01 11:04:00	WARN	ShippingService	Address not verified
+2025-05-01 13:56:00	ERROR	OrderService	Order placement failed
+2025-05-01 10:12:00	WARN	OrderService	Address not verified
+2025-05-01 11:26:00	WARN	OrderService	Inventory nearing threshold
+2025-05-01 11:32:00	INFO	AuthService	User login successful for user 102
+2025-05-01 13:32:00	ERROR	InventoryService	Shipping error
+2025-05-01 14:49:00	WARN	AuthService	Low stock alert
+2025-05-01 12:44:00	WARN	InventoryService	Inventory nearing threshold
+2025-05-01 10:27:00	INFO	PaymentService	Inventory updated
+2025-05-01 11:27:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 11:52:00	INFO	ShippingService	Inventory updated
+2025-05-01 10:19:00	WARN	AuthService	Low stock alert
+2025-05-01 10:17:00	INFO	AuthService	User login successful for user 110
+2025-05-01 13:03:00	ERROR	ShippingService	Shipping error
+2025-05-01 10:30:00	INFO	OrderService	Payment processed
+2025-05-01 10:31:00	WARN	OrderService	Address not verified
+2025-05-01 10:28:00	ERROR	OrderService	Order placement failed
+2025-05-01 11:36:00	INFO	InventoryService	Inventory updated
+2025-05-01 10:18:00	WARN	PaymentService	Address not verified
+2025-05-01 11:40:00	INFO	PaymentService	Payment processed
+2025-05-01 11:21:00	INFO	PaymentService	User login successful for user 106
+2025-05-01 10:51:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 12:41:00	ERROR	OrderService	Shipping error
+2025-05-01 12:40:00	INFO	AuthService	Shipping started
+2025-05-01 14:31:00	WARN	OrderService	Retrying payment
+2025-05-01 14:49:00	ERROR	ShippingService	User authentication failed for user 106
+2025-05-01 14:56:00	ERROR	PaymentService	Shipping error
+2025-05-01 11:31:00	ERROR	PaymentService	User authentication failed for user 104
+2025-05-01 12:31:00	ERROR	ShippingService	User authentication failed for user 101
+2025-05-01 11:33:00	WARN	AuthService	Slow response time
+2025-05-01 10:14:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 12:54:00	WARN	AuthService	Low stock alert
+2025-05-01 11:08:00	INFO	PaymentService	User login successful for user 107
+2025-05-01 13:14:00	ERROR	ShippingService	User authentication failed for user 109
+2025-05-01 10:34:00	ERROR	OrderService	Payment failed
+2025-05-01 10:38:00	INFO	AuthService	Shipping started
+2025-05-01 10:25:00	INFO	PaymentService	Inventory updated
+2025-05-01 11:16:00	INFO	ShippingService	User login successful for user 100
+2025-05-01 13:18:00	INFO	ShippingService	Inventory updated
+2025-05-01 11:43:00	WARN	OrderService	Address not verified
+2025-05-01 13:15:00	ERROR	ShippingService	Payment failed
+2025-05-01 11:49:00	INFO	InventoryService	Shipping started
+2025-05-01 13:33:00	ERROR	OrderService	Inventory sync error
+2025-05-01 13:53:00	ERROR	OrderService	Payment failed
+2025-05-01 12:36:00	INFO	OrderService	Shipping started
+2025-05-01 14:59:00	ERROR	AuthService	Inventory sync error
+2025-05-01 13:28:00	ERROR	AuthService	Order placement failed
+2025-05-01 12:51:00	WARN	OrderService	Slow response time
+2025-05-01 10:14:00	INFO	ShippingService	User login successful for user 107
+2025-05-01 14:41:00	WARN	PaymentService	Inventory nearing threshold
+2025-05-01 11:13:00	ERROR	PaymentService	User authentication failed for user 109
+2025-05-01 14:13:00	INFO	OrderService	Shipping started
+2025-05-01 10:46:00	ERROR	InventoryService	Order placement failed
+2025-05-01 14:41:00	ERROR	ShippingService	Shipping error
+2025-05-01 10:04:00	WARN	AuthService	Inventory nearing threshold
+2025-05-01 12:46:00	INFO	PaymentService	Inventory updated
+2025-05-01 11:00:00	WARN	ShippingService	Low stock alert
+2025-05-01 11:38:00	ERROR	OrderService	Inventory sync error
+2025-05-01 10:11:00	WARN	InventoryService	Address not verified
+2025-05-01 11:11:00	ERROR	OrderService	User authentication failed for user 110
+2025-05-01 10:20:00	ERROR	PaymentService	User authentication failed for user 106
+2025-05-01 13:50:00	ERROR	ShippingService	Payment failed
+2025-05-01 12:55:00	ERROR	PaymentService	Order placement failed
+2025-05-01 11:13:00	ERROR	AuthService	Inventory sync error
+2025-05-01 10:54:00	WARN	OrderService	Inventory nearing threshold
+2025-05-01 14:01:00	INFO	AuthService	User login successful for user 102
+2025-05-01 10:06:00	ERROR	PaymentService	Payment failed
+2025-05-01 13:51:00	WARN	AuthService	Address not verified
+2025-05-01 14:18:00	WARN	OrderService	Retrying payment
+2025-05-01 11:01:00	INFO	AuthService	Order placed
+2025-05-01 10:35:00	ERROR	PaymentService	Inventory sync error
+2025-05-01 11:40:00	WARN	ShippingService	Slow response time
+2025-05-01 11:54:00	WARN	PaymentService	Retrying payment
+2025-05-01 11:53:00	INFO	AuthService	Order placed
+2025-05-01 13:01:00	INFO	InventoryService	Order placed
+Time taken: 15.817 seconds
+
+#5)Create Partitioned table by Date
+
+hive> CREATE EXTERNAL TABLE logs_partitioned(log_time STRING,log_level STRING,service_name STRING,message STRING)PARTITIONED BY(log_date STRING)ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+OK
+Time taken: 0.086 seconds
+
+#6) Create View for ERROR Logs
+
+hive> CREATE VIEW error_logs AS SELECT * FROM Logs WHERE log_level = "ERROR";
+OK
+Time taken: 0.097 seconds
+hive> SELECT * FROM error_logs;
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_202505110807_0005, Tracking URL = http://0.0.0.0:50030/jobdetails.jsp?jobid=job_202505110807_0005
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_202505110807_0005
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2025-05-11 11:15:51,971 Stage-1 map = 0%,  reduce = 0%
+2025-05-11 11:15:57,999 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.76 sec
+2025-05-11 11:15:59,017 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.76 sec
+2025-05-11 11:16:00,025 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.76 sec
+2025-05-11 11:16:01,032 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.76 sec
+2025-05-11 11:16:02,040 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 0.76 sec
+MapReduce Total cumulative CPU time: 760 msec
+Ended Job = job_202505110807_0005
+MapReduce Jobs Launched: 
+Job 0: Map: 1   Cumulative CPU: 0.76 sec   HDFS Read: 6370 HDFS Write: 2429 SUCCESS
+Total MapReduce CPU Time Spent: 760 msec
+OK
+2025-05-01 12:49:00	ERROR	ShippingService	Shipping error
+2025-05-01 12:28:00	ERROR	OrderService	Payment failed
+2025-05-01 13:54:00	ERROR	OrderService	Payment failed
+2025-05-01 14:54:00	ERROR	AuthService	Order placement failed
+2025-05-01 14:38:00	ERROR	ShippingService	Payment failed
+2025-05-01 10:51:00	ERROR	ShippingService	Order placement failed
+2025-05-01 11:28:00	ERROR	PaymentService	Order placement failed
+2025-05-01 12:04:00	ERROR	ShippingService	User authentication failed for user 105
+2025-05-01 13:56:00	ERROR	OrderService	Order placement failed
+2025-05-01 13:32:00	ERROR	InventoryService	Shipping error
+2025-05-01 11:27:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 13:03:00	ERROR	ShippingService	Shipping error
+2025-05-01 10:28:00	ERROR	OrderService	Order placement failed
+2025-05-01 10:51:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 12:41:00	ERROR	OrderService	Shipping error
+2025-05-01 14:49:00	ERROR	ShippingService	User authentication failed for user 106
+2025-05-01 14:56:00	ERROR	PaymentService	Shipping error
+2025-05-01 11:31:00	ERROR	PaymentService	User authentication failed for user 104
+2025-05-01 12:31:00	ERROR	ShippingService	User authentication failed for user 101
+2025-05-01 10:14:00	ERROR	InventoryService	Inventory sync error
+2025-05-01 13:14:00	ERROR	ShippingService	User authentication failed for user 109
+2025-05-01 10:34:00	ERROR	OrderService	Payment failed
+2025-05-01 13:15:00	ERROR	ShippingService	Payment failed
+2025-05-01 13:33:00	ERROR	OrderService	Inventory sync error
+2025-05-01 13:53:00	ERROR	OrderService	Payment failed
+2025-05-01 14:59:00	ERROR	AuthService	Inventory sync error
+2025-05-01 13:28:00	ERROR	AuthService	Order placement failed
+2025-05-01 11:13:00	ERROR	PaymentService	User authentication failed for user 109
+2025-05-01 10:46:00	ERROR	InventoryService	Order placement failed
+2025-05-01 14:41:00	ERROR	ShippingService	Shipping error
+2025-05-01 11:38:00	ERROR	OrderService	Inventory sync error
+2025-05-01 11:11:00	ERROR	OrderService	User authentication failed for user 110
+2025-05-01 10:20:00	ERROR	PaymentService	User authentication failed for user 106
+2025-05-01 13:50:00	ERROR	ShippingService	Payment failed
+2025-05-01 12:55:00	ERROR	PaymentService	Order placement failed
+2025-05-01 11:13:00	ERROR	AuthService	Inventory sync error
+2025-05-01 10:06:00	ERROR	PaymentService	Payment failed
+2025-05-01 10:35:00	ERROR	PaymentService	Inventory sync error
+Time taken: 15.75 seconds
+hive> 
+
+
+
+
+
+
