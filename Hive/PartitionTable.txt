@@ -1,0 +1,113 @@
+[cloudera@localhost ~]$ hive
+Logging initialized using configuration in jar:file:/usr/lib/hive/lib/hive-common-0.10.0-cdh4.4.0.jar!/hive-log4j.properties
+Hive history file=/tmp/cloudera/hive_job_log_097bef63-617e-4f69-8a77-7ae571ad2b4f_588306421.txt
+hive> create table details(Name STRING,Email STRING,Mob INT,State STRING,City STRING)row format delimited fields terminated by ',';
+OK
+Time taken: 2.037 seconds
+hive> describe details;
+OK
+name	string	
+email	string	
+mob	int	
+state	string	
+city	string	
+Time taken: 0.599 seconds
+hive> LOAD DATA INPATH '/home/cloudera/Desktop/DETAILS/Details' INTO TABLE detaiO TABLE details;
+FAILED: SemanticException Line 1:17 Invalid path ''/home/cloudera/Desktop/DETAILS/Details'': No files matching path hdfs://localhost.localdomain:8020/home/cloudera/Desktop/DETAILS/Details
+hive> LOAD DATA LOCAL INPATH '/home/cloudera/Desktop/DETAILS/Details' INTO TABLE details;
+Copying data from file:/home/cloudera/Desktop/DETAILS/Details
+Copying file: file:/home/cloudera/Desktop/DETAILS/Details
+Loading data to table default.details
+chgrp: changing ownership of '/user/hive/warehouse/details/Details': User does not belong to hive
+Table default.details stats: [num_partitions: 0, num_files: 1, num_rows: 0, total_size: 523, raw_data_size: 0]
+OK
+Time taken: 1.243 seconds
+hive> select * from details;
+OK
+Leana	leana@gmail.com	NULL	Kerala	Pathanamthitta
+Ardra	ardra@gmail.com	NULL	Tamil Nadu	Chennai
+Firooz	firooz@gmail.com	NULL	Kerala	Alappuzha
+Sam	s@gmail.com	NULL	Karnataka	Banglore
+Prajeeth	prajeeth@gmail.com	NULL	Tamil Nadu	Coimbature
+Sneha	sneha@gmail.com	NULL	Tamil Nadu	Chennai
+Adarsh	ad@gmail.com	NULL	Kerala	Pathanamthitta
+Abel	abel@gmail.com	NULL	Kerala	Alappuzha
+Samantha	sam@gmail.com	NULL	Kerala	Pathanamthitta
+Ron	ron@gmail.com	NULL	Karnataka	Banglore
+Time taken: 0.584 seconds
+hive> create table if not exists details_partition(Name STRING,Email STRING,Mob INT)partitioned by(State STRING,City STRING)row formmat delimited fields terminated by ',';
+FAILED: ParseException line 1:118 cannot recognize input near 'row' 'formmat' 'delimited' in table row format specification
+
+hive> create table if not exists details_partition(Name STRING,Email STRING,Mob INT)partitioned by(State STRING,City STRING)row format delimited fields terminated by ','; 
+OK
+Time taken: 0.231 seconds
+hive> describe details_partition;
+OK
+name	string	
+email	string	
+mob	int	
+state	string	
+city	string	
+Time taken: 0.254 seconds
+hive> from details cus insert overwrite table details_partition(State,City) select cus.Name,cus.Email,cus.Mob,cus.State,cus.City;
+FAILED: ParseException line 1:57 cannot recognize input near '(' 'State' ',' in select clause
+
+hive> from details cus insert overwrite table details_partition(State,City)select cus.Name,cus.Email,cus.Mob,cus.State,cus.City; 
+FAILED: ParseException line 1:57 cannot recognize input near '(' 'State' ',' in select clause
+
+hive> from details cus insert overwrite table details_partition(State,City)select cus.Name,cus.Email,cus.Mob,cus.State,cus.City;
+FAILED: ParseException line 1:57 cannot recognize input near '(' 'State' ',' in select clause
+
+hive> from details cus insert overwrite table details_partition(State,City) select cus.Name,cus.Email,cus.Mob,cus.State,cus.City;
+FAILED: ParseException line 1:57 cannot recognize input near '(' 'State' ',' in select clause
+
+hive> from details cus insert overwrite table details_partition par(State,City) select cus.Name,cus.Email,cus.Mob,cus.State,cus.Citytition(State,City) select cus.Name,cus.Email,cus.Mob,cus.State,cus.City;
+FAILED: SemanticException [Error 10096]: Dynamic partition strict mode requires at least one static partition column. To turn this off set hive.exec.dynamic.partition.mode=nonstrict
+hive> set hive.exec.dynamic.partition.mode=nonstrict;
+hive> set hive.exec.dynamic.partition=true           
+    > ;
+hive> from details cus insert overwrite table details_partition partition(State,City) select cus.Name,cus.Email,cus.Mob,cus.State,cus.City;
+Total MapReduce jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_202505062229_0001, Tracking URL = http://0.0.0.0:50030/jobdetails.jsp?jobid=job_202505062229_0001
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_202505062229_0001
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2025-05-07 00:38:33,856 Stage-1 map = 0%,  reduce = 0%
+2025-05-07 00:38:39,962 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.02 sec
+2025-05-07 00:38:41,029 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.02 sec
+2025-05-07 00:38:42,053 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.02 sec
+2025-05-07 00:38:43,077 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.02 sec
+2025-05-07 00:38:44,102 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.02 sec
+2025-05-07 00:38:45,139 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.02 sec
+MapReduce Total cumulative CPU time: 1 seconds 20 msec
+Ended Job = job_202505062229_0001
+Ended Job = 1054028171, job is filtered out (removed at runtime).
+Ended Job = 1713613323, job is filtered out (removed at runtime).
+Moving data to: hdfs://localhost.localdomain:8020/tmp/hive-cloudera/hive_2025-05-07_00-38-17_237_699635055386303944-1/-ext-10000
+Loading data to table default.details_partition partition (state=null, city=null)
+chgrp: changing ownership of 'hdfs://localhost.localdomain:8020/user/hive/warehouse/details_partition/state=Kerala/city=Pathanamthitta': User does not belong to hive
+chgrp: changing ownership of 'hdfs://localhost.localdomain:8020/user/hive/warehouse/details_partition/state=Tamil%20Nadu/city=Chennai': Permission denied
+chmod: changing permissions of 'hdfs://localhost.localdomain:8020/user/hive/warehouse/details_partition/state=Tamil%20Nadu/city=Chennai': Permission denied
+chgrp: changing ownership of 'hdfs://localhost.localdomain:8020/user/hive/warehouse/details_partition/state=Karnataka/city=Banglore': User does not belong to hive
+chgrp: changing ownership of 'hdfs://localhost.localdomain:8020/user/hive/warehouse/details_partition/state=Kerala/city=Alappuzha': User does not belong to hive
+chgrp: changing ownership of 'hdfs://localhost.localdomain:8020/user/hive/warehouse/details_partition/state=Tamil%20Nadu/city=Coimbature': Permission denied
+chmod: changing permissions of 'hdfs://localhost.localdomain:8020/user/hive/warehouse/details_partition/state=Tamil%20Nadu/city=Coimbature': Permission denied
+	Loading partition {state=Kerala, city=Pathanamthitta}
+	Loading partition {state=Tamil Nadu, city=Chennai}
+	Loading partition {state=Karnataka, city=Banglore}
+	Loading partition {state=Kerala, city=Alappuzha}
+	Loading partition {state=Tamil Nadu, city=Coimbature}
+Partition default.details_partition{state=Karnataka, city=Banglore} stats: [num_files: 1, num_rows: 0, total_size: 40, raw_data_size: 0]
+Partition default.details_partition{state=Kerala, city=Alappuzha} stats: [num_files: 1, num_rows: 0, total_size: 50, raw_data_size: 0]
+Partition default.details_partition{state=Kerala, city=Pathanamthitta} stats: [num_files: 1, num_rows: 0, total_size: 74, raw_data_size: 0]
+Partition default.details_partition{state=Tamil Nadu, city=Chennai} stats: [num_files: 1, num_rows: 0, total_size: 50, raw_data_size: 0]
+Partition default.details_partition{state=Tamil Nadu, city=Coimbature} stats: [num_files: 1, num_rows: 0, total_size: 31, raw_data_size: 0]
+Table default.details_partition stats: [num_partitions: 5, num_files: 5, num_rows: 0, total_size: 245, raw_data_size: 0]
+10 Rows loaded to details_partition
+MapReduce Jobs Launched: 
+Job 0: Map: 1   Cumulative CPU: 1.02 sec   HDFS Read: 746 HDFS Write: 245 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 20 msec
+OK
+Time taken: 31.581 seconds
+hive> 
